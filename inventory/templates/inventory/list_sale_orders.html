@@ -1,0 +1,168 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">List of Sale Orders</h2>
+    <a href="{% url 'create_sale_order' %}" class="btn btn-success">
+      <i class="fas fa-plus"></i> Create Sale Order
+    </a>
+  </div>
+
+  <!-- UI-Level Filter Form -->
+  <div class="mb-4">
+    <div class="row">
+      <!-- Left Side: Select Field to Filter -->
+      <div class="col-md-3">
+        <select id="filterField" class="form-control">
+          <option value="">Select Field to Filter</option>
+          <option value="order-status">Status</option>
+          <option value="order-product">Product</option>
+          <option value="order-sale-date">Sale Date</option>
+        </select>
+      </div>
+      <!-- Right Side: Input for Filter Value -->
+      <div class="col-md-3">
+        <input
+          type="text"
+          id="filterValue"
+          class="form-control"
+          placeholder="Enter value to filter"
+          disabled
+        />
+      </div>
+      <div class="col-md-3">
+        <input
+          type="date"
+          id="dateFilter"
+          class="form-control"
+          style="display: none;"
+        />
+      </div>
+      <div class="col-md-3">
+        <button type="button" class="btn btn-secondary" id="clearFilters">Clear Filters</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sale Orders Table -->
+  <div class="table-responsive">
+    <table class="table table-dark table-hover" id="saleOrdersTable">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Total Price</th>
+          <th>Sale Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if sale_orders %}
+          {% for order in sale_orders %}
+          <tr class="sale-order-row">
+            <td class="order-product">{{ order.product.name }}</td>
+            <td>{{ order.quantity }}</td>
+            <td>${{ order.total_price }}</td>
+            <td class="order-sale-date">{{ order.sale_date|date:"Y-m-d" }}</td>
+            <td class="order-status">
+              {% if order.status == "Completed" %}
+                <span class="badge bg-success">Completed</span>
+              {% elif order.status == "Cancelled" %}
+                <span class="badge bg-danger">Cancelled</span>
+              {% else %}
+                <span class="badge bg-warning text-dark">Pending</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if order.status == "Pending" %}
+                <a href="{% url 'complete_sale_order' order.id %}" class="btn btn-sm btn-primary">Complete</a>
+                <a href="{% url 'cancel_sale_order' order.id %}" class="btn btn-sm btn-danger">Cancel</a>
+              {% else %}
+                <button class="btn btn-sm btn-secondary" disabled>Action Unavailable</button>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="6" class="text-center text-light">No sale orders available.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- JavaScript for Dynamic Filtering -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let filterField = document.getElementById("filterField");
+    let filterValue = document.getElementById("filterValue");
+    let dateFilter = document.getElementById("dateFilter");
+    let clearButton = document.getElementById("clearFilters");
+
+    // Enable correct input type based on filter selection
+    filterField.addEventListener("change", function () {
+      filterValue.value = ""; // Reset input field
+      dateFilter.value = ""; // Reset date field
+      filterValue.style.display = "none";
+      dateFilter.style.display = "none";
+      filterValue.disabled = true;
+      dateFilter.disabled = true;
+
+      if (filterField.value === "order-sale-date") {
+        dateFilter.style.display = "block";
+        dateFilter.disabled = false;
+      } else if (filterField.value !== "") {
+        filterValue.style.display = "block";
+        filterValue.disabled = false;
+      }
+
+      filterTable();
+    });
+
+    filterValue.addEventListener("keyup", filterTable);
+    dateFilter.addEventListener("change", filterTable);
+    clearButton.addEventListener("click", clearFilters);
+
+    function filterTable() {
+      let selectedField = filterField.value;
+      let inputValue = filterValue.value.toLowerCase();
+      let dateValue = dateFilter.value;
+      let rows = document.querySelectorAll(".sale-order-row");
+
+      rows.forEach(row => {
+        let fieldValue = "";
+        let shouldDisplay = true; // By default, all rows are visible
+
+        if (selectedField === "order-sale-date") {
+          fieldValue = row.querySelector("." + selectedField).innerText.trim();
+          shouldDisplay = dateValue === "" || fieldValue === dateValue;
+        } else if (selectedField) {
+          fieldValue = row.querySelector("." + selectedField).innerText.toLowerCase();
+          shouldDisplay = inputValue === "" || fieldValue.includes(inputValue);
+        }
+
+        row.style.display = shouldDisplay ? "" : "none";
+      });
+    }
+
+    function clearFilters() {
+      filterField.value = "";
+      filterValue.value = "";
+      dateFilter.value = "";
+      filterValue.style.display = "none";
+      dateFilter.style.display = "none";
+      filterValue.disabled = true;
+      dateFilter.disabled = true;
+      filterTable();
+    }
+
+    // Show all rows by default until a filter is applied
+    filterTable();
+  });
+</script>
+{% endblock %}

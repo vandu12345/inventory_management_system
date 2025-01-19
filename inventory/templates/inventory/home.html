@@ -1,0 +1,90 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  /* Background gradient */
+  body {
+    background: linear-gradient(to right, #141e30, #243b55);
+  }
+
+  /* Custom styling for cards */
+  .dashboard-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 20px rgba(255, 255, 255, 0.2);
+  }
+
+  .dashboard-card .card-body {
+    padding: 20px;
+  }
+
+  .dashboard-card .btn {
+    transition: background 0.3s ease;
+  }
+
+  .dashboard-card .btn:hover {
+    background: #ffc107;
+    color: #000;
+  }
+</style>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <h1 class="fw-bold text-uppercase text-light">Welcome to Inventory Management</h1>
+      <p class="lead text-light">
+        Easily manage your products, suppliers, and sales in a single dashboard.
+      </p>
+      <hr class="custom-hr">
+    </div>
+  </div>
+
+  <div class="row text-center mt-4">
+    <div class="col-lg-3 col-md-6 mb-4">
+      <div class="card bg-dark text-light shadow-lg dashboard-card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-box"></i> Products</h5>
+          <p class="card-text">View and manage your inventory efficiently.</p>
+          <a href="{% url 'list_products' %}" class="btn btn-primary">Go to Products</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+      <div class="card bg-dark text-light shadow-lg dashboard-card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-truck"></i> Suppliers</h5>
+          <p class="card-text">Manage your suppliers and contacts.</p>
+          <a href="{% url 'list_suppliers' %}" class="btn btn-primary">Go to Suppliers</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+      <div class="card bg-dark text-light shadow-lg dashboard-card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-shopping-cart"></i> Sale Orders</h5>
+          <p class="card-text">Track and process customer orders.</p>
+          <a href="{% url 'list_sale_orders' %}" class="btn btn-primary">Go to Sale Orders</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+      <div class="card bg-dark text-light shadow-lg dashboard-card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-chart-line"></i> Stock Levels</h5>
+          <p class="card-text">Monitor current stock availability.</p>
+          <a href="{% url 'stock_level_check' %}" class="btn btn-primary">Check Stock</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

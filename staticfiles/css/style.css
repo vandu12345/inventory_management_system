@@ -1,0 +1,39 @@
+/* --- Global Dark Theme --- */
+body {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+/* --- Stylish Navigation Bar --- */
+.custom-navbar {
+    background: linear-gradient(135deg, #00d9ff, #007bff);
+    padding: 15px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Animated Inventory Management Title --- */
+.animated-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 2px;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+/* Fade-in effect for the title */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Footer Styling --- */
+.footer {
+    background: #181818;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 0.9rem;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+}

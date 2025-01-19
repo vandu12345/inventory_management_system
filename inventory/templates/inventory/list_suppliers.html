@@ -1,0 +1,118 @@
+{% extends 'inventory/base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">List of Suppliers</h2>
+    <a href="{% url 'add_supplier' %}" class="btn btn-success">
+      <i class="fas fa-plus"></i> Add Supplier
+    </a>
+  </div>
+
+  <!-- UI-Level Filter Form -->
+  <div class="mb-4">
+    <div class="row">
+      <!-- Left Side: Select Field to Filter -->
+      <div class="col-md-4">
+        <select id="filterField" class="form-control">
+          <option value="">Select Field to Filter</option>
+          <option value="supplier-name">Name</option>
+          <option value="supplier-email">Email</option>
+          <option value="supplier-phone">Phone</option>
+          <option value="supplier-address">Address</option>
+        </select>
+      </div>
+      <!-- Right Side: Input for Filter Value -->
+      <div class="col-md-4">
+        <input
+          type="text"
+          id="filterValue"
+          class="form-control"
+          placeholder="Enter value to filter"
+          disabled
+        />
+      </div>
+      <div class="col-md-2">
+        <button type="button" class="btn btn-secondary" id="clearFilters">Clear Filters</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suppliers Table -->
+  <div class="table-responsive">
+    <table class="table table-dark table-hover" id="suppliersTable">
+      <thead class="thead-light">
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Address</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if suppliers %}
+          {% for supplier in suppliers %}
+          <tr class="supplier-row">
+            <td class="supplier-name">{{ supplier.name }}</td>
+            <td class="supplier-email">{{ supplier.email }}</td>
+            <td class="supplier-phone">{{ supplier.phone }}</td>
+            <td class="supplier-address">{{ supplier.address }}</td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="4" class="text-center text-light">No suppliers available.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- JavaScript for Dynamic Filtering -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let filterField = document.getElementById("filterField");
+    let filterValue = document.getElementById("filterValue");
+    let clearButton = document.getElementById("clearFilters");
+
+    // Enable input only when a field is selected
+    filterField.addEventListener("change", function () {
+      if (filterField.value) {
+        filterValue.disabled = false;
+        filterValue.value = ""; // Reset input field
+      } else {
+        filterValue.disabled = true;
+        filterValue.value = ""; // Reset input field
+      }
+      filterTable();
+    });
+
+    filterValue.addEventListener("keyup", filterTable);
+    clearButton.addEventListener("click", clearFilters);
+
+    function filterTable() {
+      let selectedField = filterField.value;
+      let inputValue = filterValue.value.toLowerCase();
+      let rows = document.querySelectorAll(".supplier-row");
+
+      rows.forEach(row => {
+        if (selectedField && inputValue) {
+          let fieldValue = row.querySelector("." + selectedField).innerText.toLowerCase();
+          row.style.display = fieldValue.includes(inputValue) ? "" : "none";
+        } else {
+          row.style.display = "";
+        }
+      });
+    }
+
+    function clearFilters() {
+      filterField.value = "";
+      filterValue.value = "";
+      filterValue.disabled = true;
+      filterTable();
+    }
+  });
+</script>
+{% endblock %}

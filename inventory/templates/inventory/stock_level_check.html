@@ -1,0 +1,130 @@
+{% extends 'inventory/base.html' %}
+{% load custom_filters %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Stock Level Check</h2>
+
+  <!-- UI-Level Filter Form -->
+  <div class="mb-4">
+    <div class="row">
+      <!-- Left Side: Select Field to Filter -->
+      <div class="col-md-4">
+        <select id="filterField" class="form-control">
+          <option value="">Select Field to Filter</option>
+          <option value="stock-product">Product Name</option>
+          <option value="stock-category">Category</option>
+          <option value="stock-supplier">Supplier</option>
+        </select>
+      </div>
+      <!-- Right Side: Input for Filter Value -->
+      <div class="col-md-4">
+        <input
+          type="text"
+          id="filterValue"
+          class="form-control"
+          placeholder="Enter value to filter"
+          disabled
+        />
+      </div>
+      <div class="col-md-2">
+        <button type="button" class="btn btn-secondary" id="clearFilters">Clear Filters</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stock Level Table -->
+  <div class="table-responsive">
+    <table class="table table-dark table-hover" id="stockTable">
+      <thead class="thead-light">
+        <tr>
+          <th>Product Name</th>
+          <th>Category</th>
+          <th>Stock Quantity</th>
+          <th>Supplier</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if products %}
+          {% for product in products %}
+          <tr class="stock-row">
+            <td class="stock-product">{{ product.name }}</td>
+            <td class="stock-category">{{ product.category }}</td>
+            <td>
+              {% if product.stock_quantity > 10 %}
+                <span class="badge bg-success">{{ product.stock_quantity }}</span>
+              {% elif product.stock_quantity > 0 %}
+                <span class="badge bg-warning text-dark">{{ product.stock_quantity }}</span>
+              {% else %}
+                <span class="badge bg-danger">Out of Stock</span>
+              {% endif %}
+            </td>
+            <td class="stock-supplier">{{ product.supplier.name }}</td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="4" class="text-center text-light">No stock data available.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- JavaScript for Dynamic Filtering -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let filterField = document.getElementById("filterField");
+    let filterValue = document.getElementById("filterValue");
+    let clearButton = document.getElementById("clearFilters");
+
+    // Enable input only when a field is selected
+    filterField.addEventListener("change", function () {
+      filterValue.value = ""; // Reset input field
+      filterValue.style.display = "none";
+      filterValue.disabled = true;
+
+      if (filterField.value !== "") {
+        filterValue.style.display = "block";
+        filterValue.disabled = false;
+      }
+
+      filterTable();
+    });
+
+    filterValue.addEventListener("keyup", filterTable);
+    clearButton.addEventListener("click", clearFilters);
+
+    function filterTable() {
+      let selectedField = filterField.value;
+      let inputValue = filterValue.value.toLowerCase();
+      let rows = document.querySelectorAll(".stock-row");
+
+      rows.forEach(row => {
+        let fieldValue = "";
+        let shouldDisplay = true; // Show all rows by default
+
+        if (selectedField) {
+          fieldValue = row.querySelector("." + selectedField).innerText.toLowerCase();
+          shouldDisplay = inputValue === "" || fieldValue.includes(inputValue);
+        }
+
+        row.style.display = shouldDisplay ? "" : "none";
+      });
+    }
+
+    function clearFilters() {
+      filterField.value = "";
+      filterValue.value = "";
+      filterValue.style.display = "none";
+      filterValue.disabled = true;
+      filterTable();
+    }
+
+    // Show all rows by default until a filter is applied
+    filterTable();
+  });
+</script>
+{% endblock %}

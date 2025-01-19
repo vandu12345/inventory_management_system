@@ -1,0 +1,28 @@
+{% extends 'inventory/base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<h2 class="mb-4">Create Sale Order</h2>
+
+<form method="POST" class="needs-validation" novalidate>
+  {% csrf_token %}
+  
+  <div class="form-group">
+    <label for="id_product">Product</label>
+    {{ form.product|add_class:"form-control" }}
+  </div>
+
+  <div class="form-group">
+    <label for="id_quantity">Quantity</label>
+    {{ form.quantity|add_class:"form-control" }}
+  </div>
+
+  <div class="form-group">
+    <label for="id_status">Status</label>
+    {{ form.status|add_class:"form-control" }}
+  </div>
+
+  <button type="submit" class="btn btn-primary">Create Order</button>
+</form>
+
+{% endblock %}

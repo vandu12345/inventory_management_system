@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        /* Full page layout */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            background-color: #181818;
+            color: white;
+        }
+
+        /* Navbar */
+        .navbar {
+            width: 100%;
+            background-color: #212529;
+            padding: 15px 0;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #212529;
+            position: fixed;
+            top: 56px; /* Height of navbar */
+            left: 0;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar .nav-item {
+            padding: 10px 20px;
+        }
+
+        .sidebar .nav-item a {
+            color: #bbb;
+            font-size: 18px;
+            transition: 0.3s ease-in-out;
+        }
+
+        .sidebar .nav-item a:hover, .sidebar .nav-item .active {
+            background-color: #343a40;
+            border-radius: 5px;
+            color: #fff;
+        }
+
+        /* Content Section */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 20px;
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            text-align: center;
+            background-color: #212529;
+            color: white;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-dark">
+    <div class="container-fluid d-flex justify-content-center">
+        <span class="navbar-brand">Inventory Management</span>
+    </div>
+</nav>
+
+<!-- Main Layout -->
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 sidebar">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="{% url 'list_products' %}" class="nav-link {% if request.path == '/api/v1/list-products/' %}active{% endif %}">
+                        <i class="fas fa-box"></i> Products
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'list_suppliers' %}" class="nav-link {% if request.path == '/api/v1/list-suppliers/' %}active{% endif %}">
+                        <i class="fas fa-truck"></i> Suppliers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'list_sale_orders' %}" class="nav-link {% if request.path == '/api/v1/list-sale-orders/' %}active{% endif %}">
+                        <i class="fas fa-shopping-cart"></i> Sale Orders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'stock_level_check' %}" class="nav-link {% if request.path == '/api/v1/stock-level-check/' %}active{% endif %}">
+                        <i class="fas fa-chart-line"></i> Stock Level Check
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 main-content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    &copy; Created by Suvendu Mahapatra
+</footer>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
