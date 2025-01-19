@@ -1,5 +1,4 @@
-django
-djongo
+django==3.1.12
 gunicorn
-djongo
 pymongo
+djongo==1.3.7

@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:4.4
+    container_name: mongo_db
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  web:
+    build: .
+    container_name: django_inventory
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - DJANGO_DB_NAME=inventory_db
+      - DJANGO_DB_HOST=mongo
+      - DJANGO_DB_PORT=27017
+      - DJANGO_COLLECTSTATIC=0 # Disables collectstatic
+    volumes:
+      - .:/app
+
+volumes:
+  mongo_data:
