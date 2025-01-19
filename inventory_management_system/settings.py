@@ -86,13 +86,13 @@ WSGI_APPLICATION = 'inventory_management_system.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',  # The engine for MongoDB integration
-        'NAME': 'inventory_management_db',
+        'NAME': os.getenv('DJANGO_DB_NAME', 'inventory_db'),  # Database Name
         'CLIENT': {  
-            'host': 'mongodb://localhost:27017', 
+            'host': os.getenv('DJANGO_DB_URI', 'mongodb://mongo:27017'),  # MongoDB URI
+            'serverSelectionTimeoutMS': 5000,  # Prevents timeout issues
         },
     }
 }

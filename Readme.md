@@ -61,4 +61,14 @@ python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 
+
+or Install Docker
+use command : https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04
+
+Use command to run application
+docker-compose build --no-cache
+docker-compose up -d
+
+
+
 ```
