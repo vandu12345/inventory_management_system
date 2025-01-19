@@ -52,6 +52,13 @@ Follow these steps to set up the project locally:
 ### **1️⃣ Clone the Repository**
 
 ```sh
+Development Os: Ubuntu 22.04
 git clone https://github.com/yourusername/inventory-management-system.git
 cd inventory-management-system
+install mongodb : https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/
+pip3 install -r requirements.txt
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+
 ```

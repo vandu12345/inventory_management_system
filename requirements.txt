@@ -1,0 +1,5 @@
+django
+djongo
+gunicorn
+djongo
+pymongo
